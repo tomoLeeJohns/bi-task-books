@@ -6,7 +6,14 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "baseUrl": "./",
+    "paths": {
+      "@models/*": ["src/models/*"],
+      "@types/*": ["src/types/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@services/*": ["src/services/*"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
