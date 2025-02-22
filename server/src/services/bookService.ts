@@ -2,42 +2,45 @@ import db from "../models/db.js";
 import { Book, GetBooksParams } from "../types/index.js";
 
 const getBooks = async (queryParams: GetBooksParams) => {
-  const { title, isbn, cursor, prevCursor, limit } = queryParams;
+  const { title, author, cursor, prevCursor, limit } = queryParams;
+  const searchParamsEmpty = !title?.length && !author?.length;
   let sql = `SELECT * FROM books WHERE 1=1`;
   let params = [];
 
   if (title) {
     sql += ` AND title LIKE ?`;
-    params.push(`%${title}%`);
+    params.push(`${title}`);
   }
 
-  if (isbn) {
-    sql += ` AND isbn LIKE ?`;
-    params.push(`%${isbn}%`);
+  if (author) {
+    sql += ` AND author LIKE ?`;
+    params.push(`${author}`);
   }
 
-  if (cursor) {
+  if (cursor && searchParamsEmpty) {
     sql += ` AND id > ?`;
     params.push(cursor);
   }
 
-  if (prevCursor) {
+  if (prevCursor && searchParamsEmpty) {
     sql += ` AND id < ?`;
     params.push(prevCursor);
   }
 
-  sql += ` ORDER BY id ASC LIMIT ?`;
-  params.push(Number(limit));
+  if (!searchParamsEmpty) {
+    sql += ` ORDER BY id ASC LIMIT ?`;
+    params.push(Number(limit));
+  }
 
   const [rows] = await db.query(sql, params);
   return rows as Book[];
 };
 
 const addBook = async (book: Omit<Book, "id">) => {
-  const { title, author, isbn, numberOfPages, rating } = book;
+  const { title, author, isbn, pages, rating } = book;
   const query =
-    "INSERT INTO books (title, author, isbn, numberOfPages, rating) VALUES (?, ?, ?, ?, ?)";
-  await db.query(query, [title, author, isbn, numberOfPages, rating]);
+    "INSERT INTO books (title, author, isbn, pages, rating) VALUES (?, ?, ?, ?, ?)";
+  return await db.query(query, [title, author, isbn, pages, rating]);
 };
 
 const isIsbnUnique = async (isbn: string) => {

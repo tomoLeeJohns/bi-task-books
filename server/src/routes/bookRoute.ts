@@ -5,8 +5,8 @@ const router = express.Router();
 
 router.get("/", bookController.getBooks);
 
-router.post("/add-book", bookController.addBook);
+router.get("/check-isbn", bookController.checkIsbnUnique);
 
-router.post("/check-isbn", bookController.checkIsbnUnique);
+router.post("/add-book", bookController.addBook);
 
 export default router;

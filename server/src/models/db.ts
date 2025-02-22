@@ -1,4 +1,7 @@
 import mysql from "mysql2/promise";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const PASSWORD = process.env.DB_PASSWORD;
 const DATABASE = process.env.DB_DATABASE;

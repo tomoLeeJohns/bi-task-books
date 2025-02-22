@@ -9,9 +9,11 @@ const getBooks = async (
   try {
     const params = req.query;
     const rows = await bookService.getBooks(params);
+    const searchParamsEmpty = !params?.title?.length && !params?.author?.length;
 
-    const nextCursor = rows.length > 0 ? rows[rows.length - 1].id : null;
-    const prevCursor = rows.length > 0 ? rows[0].id : null;
+    const nextCursor =
+      rows.length > 0 && searchParamsEmpty ? rows[rows.length - 1].id : null;
+    const prevCursor = rows.length > 0 && searchParamsEmpty ? rows[0].id : null;
 
     res.json({ books: rows, nextCursor, prevCursor });
   } catch (error) {
@@ -24,30 +26,32 @@ const addBook = async (
   req: Request<{}, {}, Omit<Book, "id">>,
   res: Response
 ) => {
-  const { title, author, isbn, numberOfPages, rating } = req.body;
+  const { title, author, isbn, pages, rating } = req.body;
 
-  if (!title || !author || !isbn || !numberOfPages || !rating) {
+  if (!title || !author || !isbn || !pages || !rating) {
     res.status(400).json({ error: "All fields are required" });
+    return;
   }
 
   try {
-    await bookService.addBook({ title, author, isbn, numberOfPages, rating });
-    res.status(201).json({ message: "Book added successfully" });
+    await bookService.addBook({ title, author, isbn, pages, rating });
+    res.status(201).json({ message: "Book added successfully", status: true });
   } catch (error) {
     console.error("Error adding book:", error);
-    res.status(500).json({ error: "Failed to add book" });
+    res.status(500).json({ error: "Failed to add book", status: false });
   }
 };
 
 const checkIsbnUnique = async (
-  req: Request<{}, {}, Pick<Book, "isbn">>,
+  req: Request<{}, {}, {}, Pick<Book, "isbn">>,
   res: Response
 ) => {
-  const { isbn } = req.body;
+  const { isbn } = req.query;
 
   try {
     if (!isbn) {
       res.status(400).json({ message: "ISBN is required" });
+      return;
     }
 
     const isUnique = await bookService.isIsbnUnique(isbn);

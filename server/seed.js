@@ -45,7 +45,7 @@ const generateFakeData = (count) => {
 };
 
 const insertDataBatch = async (batchSize, totalRecords) => {
-  const batchInsertQuery = `INSERT INTO books (title, author, isbn, numberOfPages, rating) VALUES ?`;
+  const batchInsertQuery = `INSERT INTO books (title, author, isbn, pages, rating) VALUES ?`;
   let insertedRecords = 0;
 
   while (insertedRecords < totalRecords) {
@@ -69,12 +69,12 @@ const createDatabase = async () => {
               title VARCHAR(255) NOT NULL,
               author VARCHAR(255) NOT NULL,
               isbn VARCHAR(20) UNIQUE NOT NULL,
-              numberOfPages INT NOT NULL,
+              pages INT NOT NULL,
               rating INT NOT NULL
             )
           `);
     await connection.query(
-      "CREATE INDEX idx_title_isbn ON books (title, isbn)"
+      "CREATE INDEX idx_title_isbn ON books (id, title, isbn)"
     );
     console.log("Database created");
   } catch (err) {
@@ -83,8 +83,8 @@ const createDatabase = async () => {
 };
 createDatabase()
   .then(() => {
-    const totalRecords = 50; //10_000_000;
-    const batchSize = 10; //10_000;
+    const totalRecords = 10_000_000;
+    const batchSize = 10_000;
     insertDataBatch(batchSize, totalRecords)
       .then(() => {
         console.log("Seeding complete");

@@ -1,51 +1,31 @@
 import React from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
-import { NewBookForm } from "./components/NewBookForm";
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
+import AddBook from "./components/AddBook";
+import SearchForm from "./components/SearchBook";
+import { Container, Tab, Tabs } from "@mui/material";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
-  const [value, setValue] = React.useState(0);
+  const queryClient = new QueryClient();
+  const [tabIndex, setTabIndex] = React.useState(0);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+  const handleTabChange = (event: React.SyntheticEvent, newIndex: number) => {
+    event.preventDefault();
+    setTabIndex(newIndex);
   };
+
   return (
     <div>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={value} onChange={handleChange}>
-          <Tab label="Add book" id="simple-tab-0" />
-          <Tab label="List books" id="simple-tab-1" />
-        </Tabs>
-      </Box>
-      <CustomTabPanel value={value} index={0}>
-        <NewBookForm />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        Item Two
-      </CustomTabPanel>
+      <QueryClientProvider client={queryClient}>
+        <Container>
+          <Tabs value={tabIndex} onChange={handleTabChange} centered>
+            <Tab label="Add Book" />
+            <Tab label="Search Books" />
+          </Tabs>
+
+          {tabIndex === 0 && <AddBook />}
+          {tabIndex === 1 && <SearchForm />}
+        </Container>
+      </QueryClientProvider>
     </div>
   );
 }

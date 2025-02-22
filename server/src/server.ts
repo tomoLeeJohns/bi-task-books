@@ -3,7 +3,6 @@ import cors from "cors";
 import path from "path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
-import bodyParser from "body-parser";
 import bookRoutes from "./routes/bookRoute.js";
 
 dotenv.config();
@@ -15,7 +14,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../../client/dist")));
 
 app.use("/api/books", bookRoutes);
