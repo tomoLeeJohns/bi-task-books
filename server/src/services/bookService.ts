@@ -27,7 +27,7 @@ const getBooks = async (queryParams: GetBooksParams) => {
     params.push(prevCursor);
   }
 
-  if (!searchParamsEmpty) {
+  if (searchParamsEmpty) {
     sql += ` ORDER BY id ASC LIMIT ?`;
     params.push(Number(limit));
   }
