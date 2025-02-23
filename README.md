@@ -34,12 +34,13 @@ This is a simple Bookstore API built with Node.js, Express, MySQL, and TypeScrip
 To populate the database with initial data, run the `seed.js` file:
 
 ```bash
-node ./server/seed.js
+cd server
+node seed.js
 ```
 
 ### **3. Start server**
 
-After seeding the database, you can start the application by running the following command:
+After seeding the database, you can start the application by running the following command ( from root directory ):
 
 ```bash
 npm run start
