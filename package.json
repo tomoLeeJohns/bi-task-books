@@ -4,9 +4,9 @@
   "description": "bi test task",
   "main": "index.js",
   "scripts": {
-    "start": "npm run install-all && concurrently \"npm run client\" \"npm run server\"",
-    "start-dev": "npm run install-all && concurrently \"npm run client-dev\" \"npm run server-dev\"",
-    "install-all": "npm install && cd client && npm install && cd ../server && npm install",
+    "start": "npm install && npm run install-all && npm run client && npm run server",
+    "start-dev": "npm run install-all && npm run client-dev && npm run server-dev",
+    "install-all": "concurrently  \"(cd client && npm install)\" \"(cd server && npm install)\"",
     "server": "cd server && npm run build",
     "server-dev": "cd server && npm run dev",
     "client": "cd client && npm run build",

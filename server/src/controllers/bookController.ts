@@ -11,8 +11,16 @@ const getBooks = async (
     const rows = await bookService.getBooks(params);
     const searchParamsEmpty = !params?.title?.length && !params?.author?.length;
 
+    if (params.prevCursor && searchParamsEmpty) {
+      rows.reverse();
+    }
+
     const nextCursor =
-      rows.length > 0 && searchParamsEmpty ? rows[rows.length - 1].id : null;
+      rows.length > 0 && searchParamsEmpty
+        ? rows.length === 10
+          ? rows[rows.length - 1].id
+          : null
+        : null;
     const prevCursor = rows.length > 0 && searchParamsEmpty ? rows[0].id : null;
 
     res.json({ books: rows, nextCursor, prevCursor });

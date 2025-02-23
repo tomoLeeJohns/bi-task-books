@@ -6,6 +6,7 @@ const getBooks = async (queryParams: GetBooksParams) => {
   const searchParamsEmpty = !title?.length && !author?.length;
   let sql = `SELECT * FROM books WHERE 1=1`;
   let params = [];
+  let order = "";
 
   if (title) {
     sql += ` AND title LIKE ?`;
@@ -18,20 +19,21 @@ const getBooks = async (queryParams: GetBooksParams) => {
   }
 
   if (cursor && searchParamsEmpty) {
+    order = "ASC";
     sql += ` AND id > ?`;
     params.push(cursor);
   }
 
   if (prevCursor && searchParamsEmpty) {
+    order = "DESC";
     sql += ` AND id < ?`;
     params.push(prevCursor);
   }
 
   if (searchParamsEmpty) {
-    sql += ` ORDER BY id ASC LIMIT ?`;
+    sql += ` ORDER BY id ${order} LIMIT ?`;
     params.push(Number(limit));
   }
-
   const [rows] = await db.query(sql, params);
   return rows as Book[];
 };

@@ -13,11 +13,17 @@ export const ADD_BOOK_SCHEMA = yup.object().shape({
   title: yup
     .string()
     .required("Title is a required field")
-    .matches(/^[A-Za-z\s]+$/, "Title can only contain letters and spaces"),
+    .matches(
+      /^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]+$/,
+      "Title can only contain letters and spaces"
+    ),
   author: yup
     .string()
     .required("Author is a required field")
-    .matches(/^[^0-9]*$/, "Author name cannot contain numbers"),
+    .matches(
+      /^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]+$/,
+      "Author can only contain letters and spaces"
+    ),
   isbn: yup
     .string()
     .required("ISBN is a required field")
@@ -53,7 +59,7 @@ export const SEARCH_BOOK_SCHEMA = yup.object().shape(
               .string()
               .required("Title is a required field")
               .matches(
-                /^[A-Za-z\s]+$/,
+                /^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]+$/,
                 "Title can only contain letters and spaces"
               ),
         }),
@@ -70,7 +76,7 @@ export const SEARCH_BOOK_SCHEMA = yup.object().shape(
               .string()
               .required("Author is a required field")
               .matches(
-                /^[A-Za-z\s]+$/,
+                /^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]+$/,
                 "Title can only contain letters and spaces"
               ),
         }),

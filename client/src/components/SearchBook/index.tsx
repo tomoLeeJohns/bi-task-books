@@ -34,19 +34,11 @@ const SearchBooks: React.FC = () => {
   const [filters, setFilters] = React.useState({ title: "", author: "" });
   const [cursor, setCursor] = React.useState<number | null>(null);
   const [prevCursor, setPrevCursor] = React.useState<number | null>(null);
-  const { data, isLoading } = useBooks(
-    {
-      cursor,
-      prevCursor,
-      ...filters,
-    },
-    {
-      onSuccess: (newData) => {
-        setCursor(newData.nextCursor);
-        setPrevCursor(newData.prevCursor);
-      },
-    }
-  );
+  const { data, isLoading } = useBooks({
+    cursor,
+    prevCursor,
+    ...filters,
+  });
   const { handleSubmit, control, watch, reset } = useForm<FormData>({
     resolver: yupResolver(SEARCH_BOOK_SCHEMA) as unknown as Resolver<
       FormData,

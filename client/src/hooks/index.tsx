@@ -39,10 +39,7 @@ const fetchBooks = async (queryParams: GetBooksParams) => {
   }
   return response.json();
 };
-export const useBooks = (
-  queryParams: GetBooksParams,
-  options?: { onSuccess?: (data: GetBooksResponse) => void }
-) => {
+export const useBooks = (queryParams: GetBooksParams) => {
   const { data, isLoading } = useQuery<
     GetBooksResponse,
     Error,
@@ -51,7 +48,6 @@ export const useBooks = (
     queryKey: ["books", { ...queryParams }],
     queryFn: () => fetchBooks(queryParams),
     placeholderData: keepPreviousData,
-    ...options,
   });
 
   return { data, isLoading };
